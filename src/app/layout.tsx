@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
+import { User, Waves } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +31,59 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+         <header className="bg-white shadow-sm border-b border-orange-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-4 sm:space-x-8">
+              <Link href="/" className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-blue-500 rounded-lg flex items-center justify-center">
+                  <Waves className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-lg sm:text-xl font-bold text-gray-900">A Definir</span>
+              </Link>
+              <nav className="hidden lg:flex space-x-6">
+                <Link href="#" className="text-gray-700 hover:text-orange-600 font-medium">
+                  Propriedades
+                </Link>
+                <Link href="#" className="text-gray-700 hover:text-orange-600 font-medium">
+                  Experiências
+                </Link>
+                <Link href="#" className="text-gray-700 hover:text-orange-600 font-medium">
+                  Sobre
+                </Link>
+                <Link href="#" className="text-gray-700 hover:text-orange-600 font-medium">
+                  Contato
+                </Link>
+              </nav>
+            </div>
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              {/* <Button variant="ghost" className="hidden sm:flex text-gray-700 hover:text-orange-600 text-sm">
+                Anuncie sua propriedade
+              </Button> */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="border-orange-200 hover:bg-orange-50">
+                    <User className="w-4 h-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Entrar</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem>
+                    <User className="w-4 h-4 mr-2" />
+                    Fazer Login
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>Criar Conta</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Minhas Reservas</DropdownMenuItem>
+                  <DropdownMenuItem>Meu Perfil</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="sm:hidden">Anuncie sua propriedade</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </div>
+      </header>
         {children}
       </body>
     </html>
