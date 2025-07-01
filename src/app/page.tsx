@@ -3,7 +3,6 @@ import {
   MapPin,
   Star,
   Heart,
-  User,
   Calendar,
   Users,
   Wifi,

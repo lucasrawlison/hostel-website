@@ -11,8 +11,6 @@ import {
   Car,
   Waves,
   Coffee,
-  Shield,
-  MessageCircle,
   CheckCircle,
 } from "lucide-react"
 import Image from "next/image"
