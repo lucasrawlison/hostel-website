@@ -112,6 +112,18 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+
+
+[data-placeholder] {
+ color: white !important;
+}
+
+@media (min-width: 640px) {
+  [data-placeholder] {
+   color: black !important;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -4,7 +4,6 @@ import {
   MapPin,
   Star,
   Heart,
-  Calendar,
   Users,
   Wifi,
   Car,
@@ -23,7 +22,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import Autoplay from "embla-carousel-autoplay";
-
 import hero from "@/imgs/pbHero1.jpeg";
 import hero2 from "@/imgs/pbHero2.jpeg";
 import igrejaBananeiras from "@/imgs/igrejaBananeiras.jpg";
@@ -50,8 +48,10 @@ import React from "react";
 
 export default function Component() {
   const plugin = React.useRef(
-    Autoplay({ delay: 4000, stopOnInteraction: true })
+    Autoplay({ delay: 4000})
   );
+
+
 
   const featuredProperties = [
     {
@@ -75,7 +75,9 @@ export default function Component() {
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-blue-600 via-blue-500 to-orange-400 text-white h-[600px]">
-        <Carousel plugins={[plugin.current]} className="absolute inset-0">
+        <Carousel
+        opts={{loop:true}}
+        plugins={[plugin.current]} className="absolute inset-0">
           <CarouselContent className="h-full inset-0">
             <CarouselItem className="relative h-[600px]">
               <Image
@@ -123,21 +125,22 @@ export default function Component() {
           </div>
 
           {/* Search Form */}
-          <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="sm:col-span-2 lg:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className=" backdrop-blur-xs shadow-2xl sm:rounded-2xl sm:backdrop-blur-none sm:bg-white outline-blue-100/50 outline-1 scale-75 translate-y-28 sm:translate-0 sm:scale-100  p-4 sm:p-6 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 items-center sm:grid-cols-2 lg:grid-cols-2 gap-4">
+              <div className="sm:col-span-1">
+                <label className="block text-sm font-medium sm:text-black text-white mb-2">
                   Destino
                 </label>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                  <MapPin className="absolute left-3 top-3 w-5 h-5 text-white sm:text-black" />
                   <Input
+                  
                     placeholder="Paraíba, Paraíba"
-                    className="pl-10 h-12 border-gray-200 focus:border-orange-400 focus:ring-orange-400"
+                    className=" placeholder:text-white pl-10 h-12 text-white sm:placeholder:text-black border-gray-200 focus:border-orange-400 focus:ring-orange-400"
                   />
                 </div>
               </div>
-              <div className="sm:col-span-1 lg:col-span-1">
+              {/* <div className="sm:col-span-1 lg:col-span-1">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Check-in / Check-out
                 </label>
@@ -148,15 +151,20 @@ export default function Component() {
                     className="pl-10 h-12 border-gray-200 focus:border-orange-400 focus:ring-orange-400"
                   />
                 </div>
-              </div>
-              <div className="sm:col-span-1 lg:col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              </div> */}
+              <div className="">
+                <label className="block text-sm font-medium text-white mb-2 sm:text-black">
                   Hóspedes
                 </label>
-                <Select>
-                  <SelectTrigger className="h-12 border-gray-200 focus:border-orange-400 focus:ring-orange-400">
-                    <Users className="w-5 h-5 text-gray-400 mr-2" />
-                    <SelectValue placeholder="2 hóspedes" />
+                <Select
+                
+                >
+                  <SelectTrigger
+                  
+                  className="w-full sm: text-white sm:text-black border-gray-200 focus:border-orange-400 focus:ring-orange-400">
+                    <Users className="w-5 h-5 text-white mr-2 sm:text-black" />
+                    <SelectValue
+                     placeholder="2 hóspedes" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="1">1 hóspede</SelectItem>
@@ -170,7 +178,7 @@ export default function Component() {
             </div>
             <div className="mt-4 sm:mt-6">
               <Button className="w-full h-12 bg-gradient-to-r from-orange-500 to-blue-600 hover:from-orange-600 hover:to-blue-700 text-white font-semibold text-base sm:text-lg">
-                <Search className="w-5 h-5 mr-2" />
+                <Search className="w-5 h-5 mr-2 " />
                 Buscar Propriedades
               </Button>
             </div>

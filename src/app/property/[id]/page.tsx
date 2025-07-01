@@ -1,3 +1,4 @@
+"use client"
 import {
   ArrowLeft,
   Star,
@@ -12,25 +13,30 @@ import {
   Waves,
   Coffee,
   CheckCircle,
-} from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import CasaBananeiras1 from "@/imgs/properties/1/casa-bananeiras.jpg";
 import CasaBananeiras2 from "@/imgs/properties/1/casa-bananeiras2.jpg";
 import CasaBananeiras3 from "@/imgs/properties/1/casa-bananeiras3.jpg";
 import CasaBananeiras4 from "@/imgs/properties/1/casa-bananeiras4.jpg";
 import CasaBananeiras5 from "@/imgs/properties/1/casa-bananeiras5.jpg";
-
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import dynamic from "next/dynamic";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function PropertyDetails() {
-
+  const MapVis = dynamic(() => import("@/app/utils/map"), { ssr: false });
 
   const property = {
     id: 1,
@@ -39,7 +45,7 @@ export default function PropertyDetails() {
     price: 180,
     rating: 4.8,
     reviewsQtd: 124,
-    
+
     guests: 4,
     bedrooms: 2,
     bathrooms: 2,
@@ -72,7 +78,7 @@ export default function PropertyDetails() {
     },
     location: {
       address: "Bananeiras, Paraíba, Brasil",
-      coordinates: { lat: -7.0616, lng: -34.834 },
+      coordinates: { lat: -6.751821, lng:-35.637256},
       nearbyPlaces: [
         { name: "Centro", distance: "50m", type: "Turismo, comércio" },
         { name: "Antiga ferroviária", distance: "1.2km", type: "Turismo" },
@@ -88,7 +94,7 @@ export default function PropertyDetails() {
       "Não é permitido fazer festas ou eventos",
       "Máximo de 4 hóspedes",
     ],
-    
+
     reviews: [
       {
         id: 1,
@@ -118,7 +124,7 @@ export default function PropertyDetails() {
           "Ótima localização e casa confortável. Apenas o WiFi poderia ser um pouco mais rápido, mas no geral foi uma experiência muito boa.",
       },
     ],
-  }
+  };
 
   const similarProperties = [
     {
@@ -145,7 +151,7 @@ export default function PropertyDetails() {
       rating: 4.5,
       image: "/placeholder.svg?height=200&width=300",
     },
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -156,15 +162,25 @@ export default function PropertyDetails() {
             <div className="flex items-center space-x-4">
               <Link href="/" className="flex items-center space-x-2">
                 <ArrowLeft className="w-5 h-5 text-gray-600" />
-                <span className="text-gray-600 hover:text-orange-600">Voltar</span>
+                <span className="text-gray-600 hover:text-orange-600">
+                  Voltar
+                </span>
               </Link>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-4">
-              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-orange-600">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-600 hover:text-orange-600"
+              >
                 <Share className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Compartilhar</span>
               </Button>
-              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-red-500">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-600 hover:text-red-500"
+              >
                 <Heart className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Salvar</span>
               </Button>
@@ -176,13 +192,17 @@ export default function PropertyDetails() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Property Title */}
         <div className="mb-6">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">{property.title}</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+            {property.title}
+          </h1>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center space-x-4 text-sm sm:text-base">
               <div className="flex items-center space-x-1">
                 <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                 <span className="font-medium">{property.rating}</span>
-                <span className="text-gray-500">({property.reviewsQtd} avaliações)</span>
+                <span className="text-gray-500">
+                  ({property.reviewsQtd} avaliações)
+                </span>
               </div>
               <div className="flex items-center space-x-1 text-gray-600">
                 <MapPin className="w-4 h-4" />
@@ -240,9 +260,11 @@ export default function PropertyDetails() {
                 className="hover:cursor-pointer w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                <Button 
-                className="hover:cursor-pointer"
-                variant="secondary" size="sm">
+                <Button
+                  className="hover:cursor-pointer"
+                  variant="secondary"
+                  size="sm"
+                >
                   Ver todas as fotos
                 </Button>
               </div>
@@ -277,7 +299,9 @@ export default function PropertyDetails() {
                 </div>
                 <Separator className="my-6" />
                 <div className="prose prose-gray max-w-none">
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">{property.description}</p>
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                    {property.description}
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -285,7 +309,9 @@ export default function PropertyDetails() {
             {/* Amenities */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-xl font-semibold">O que este lugar oferece</CardTitle>
+                <CardTitle className="text-xl font-semibold">
+                  O que este lugar oferece
+                </CardTitle>
               </CardHeader>
               <CardContent className="p-6 pt-0">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -293,7 +319,9 @@ export default function PropertyDetails() {
                     <div key={index} className="flex items-center space-x-3">
                       <amenity.icon className="w-5 h-5 text-gray-600" />
                       <span className="text-gray-700">{amenity.name}</span>
-                      {amenity.available && <CheckCircle className="w-4 h-4 text-green-500 ml-auto" />}
+                      {amenity.available && (
+                        <CheckCircle className="w-4 h-4 text-green-500 ml-auto" />
+                      )}
                     </div>
                   ))}
                 </div>
@@ -303,20 +331,35 @@ export default function PropertyDetails() {
             {/* Location */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-xl font-semibold">Onde você ficará</CardTitle>
+                <CardTitle className="text-xl font-semibold">
+                  Onde você ficará
+                </CardTitle>
               </CardHeader>
               <CardContent className="p-6 pt-0">
                 <div className="mb-4">
-                  <p className="text-gray-700 mb-2">{property.location.address}</p>
+                  <p className="text-gray-700 mb-2">
+                    {property.location.address}
+                  </p>
                   <div className="bg-gray-200 h-64 rounded-lg flex items-center justify-center">
-                    <p className="text-gray-500">Mapa interativo aqui</p>
+                    <MapVis
+                      latitude={property.location.coordinates.lat}
+                      longitude={property.location.coordinates.lng}
+                      zoom={16}
+                      height={256} // 16rem = 256px para h-64
+
+                    />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                   {property.location.nearbyPlaces.map((place, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    >
                       <div>
-                        <p className="font-medium text-gray-900">{place.name}</p>
+                        <p className="font-medium text-gray-900">
+                          {place.name}
+                        </p>
                         <p className="text-sm text-gray-600">{place.type}</p>
                       </div>
                       <Badge variant="secondary">{place.distance}</Badge>
@@ -339,29 +382,49 @@ export default function PropertyDetails() {
               <CardContent className="p-6 pt-0">
                 <div className="space-y-6">
                   {property.reviews.map((review) => (
-                    <div key={review.id} className="border-b border-gray-100 last:border-0 pb-6 last:pb-0">
+                    <div
+                      key={review.id}
+                      className="border-b border-gray-100 last:border-0 pb-6 last:pb-0"
+                    >
                       <div className="flex items-start space-x-4">
                         <Avatar className="w-10 h-10">
-                          <AvatarImage src={review.avatar || "/placeholder.svg"} alt={review.user} />
-                          <AvatarFallback>{review.user.charAt(0)}</AvatarFallback>
+                          <AvatarImage
+                            src={review.avatar || "/placeholder.svg"}
+                            alt={review.user}
+                          />
+                          <AvatarFallback>
+                            {review.user.charAt(0)}
+                          </AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
-                            <h4 className="font-medium text-gray-900">{review.user}</h4>
+                            <h4 className="font-medium text-gray-900">
+                              {review.user}
+                            </h4>
                             <div className="flex items-center space-x-1">
                               {[...Array(review.rating)].map((_, i) => (
-                                <Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                                <Star
+                                  key={i}
+                                  className="w-3 h-3 fill-yellow-400 text-yellow-400"
+                                />
                               ))}
                             </div>
                           </div>
-                          <p className="text-sm text-gray-500 mb-2">{review.date}</p>
-                          <p className="text-gray-700 leading-relaxed">{review.comment}</p>
+                          <p className="text-sm text-gray-500 mb-2">
+                            {review.date}
+                          </p>
+                          <p className="text-gray-700 leading-relaxed">
+                            {review.comment}
+                          </p>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-                <Button variant="outline" className="w-full mt-6 bg-transparent">
+                <Button
+                  variant="outline"
+                  className="w-full mt-6 bg-transparent"
+                >
                   Ver todas as {property.reviews.length} avaliações
                 </Button>
               </CardContent>
@@ -370,7 +433,9 @@ export default function PropertyDetails() {
             {/* Rules */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-xl font-semibold">Regras da casa</CardTitle>
+                <CardTitle className="text-xl font-semibold">
+                  Regras da casa
+                </CardTitle>
               </CardHeader>
               <CardContent className="p-6 pt-0">
                 <div className="space-y-3">
@@ -392,29 +457,35 @@ export default function PropertyDetails() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-6">
                     <div>
-                      <span className="text-2xl sm:text-3xl font-bold text-gray-900">R$ {property.price}</span>
+                      <span className="text-2xl sm:text-3xl font-bold text-gray-900">
+                        R$ {property.price}
+                      </span>
                       <span className="text-gray-500 ml-1">/noite</span>
                     </div>
                     <div className="flex items-center space-x-1">
                       <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                       <span className="font-medium">{property.rating}</span>
-                      <span className="text-gray-500 text-sm">({property.reviews.length})</span>
+                      <span className="text-gray-500 text-sm">
+                        ({property.reviews.length})
+                      </span>
                     </div>
                   </div>
 
                   <div className="space-y-4 mb-6">
                     <div className="grid grid-cols-2 gap-2">
-                      <div className="border border-gray-300 rounded-lg p-3">
+                      {/* <div className="border border-gray-300 rounded-lg p-3">
                         <label className="block text-xs font-medium text-gray-700 mb-1">CHECK-IN</label>
                         <Input placeholder="dd/mm/aaaa" className="border-0 p-0 text-sm" />
                       </div>
                       <div className="border border-gray-300 rounded-lg p-3">
                         <label className="block text-xs font-medium text-gray-700 mb-1">CHECK-OUT</label>
                         <Input placeholder="dd/mm/aaaa" className="border-0 p-0 text-sm" />
-                      </div>
+                      </div> */}
                     </div>
                     <div className="border border-gray-300 rounded-lg p-3">
-                      <label className="block text-xs font-medium text-gray-700 mb-1">HÓSPEDES</label>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        HÓSPEDES
+                      </label>
                       <Select>
                         <SelectTrigger className="border-0 p-0 text-sm">
                           <SelectValue placeholder="1 hóspede" />
@@ -429,16 +500,22 @@ export default function PropertyDetails() {
                     </div>
                   </div>
 
-                  <Button className="w-full h-12 bg-gradient-to-r from-orange-500 to-blue-600 hover:from-orange-600 hover:to-blue-700 text-white font-semibold mb-4">
+                  <Button className=" hover:cursor-pointer w-full h-12 bg-gradient-to-r from-orange-500 to-blue-600 hover:from-orange-600 hover:to-blue-700 text-white font-semibold mb-4">
                     Reservar
                   </Button>
 
-                  <p className="text-center text-sm text-gray-500 mb-4">Você ainda não será cobrado</p>
+                  <p className="text-center text-sm text-gray-500 mb-4">
+                    Você ainda não será cobrado
+                  </p>
 
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-700">R$ {property.price} x 5 noites</span>
-                      <span className="text-gray-900">R$ {property.price * 5}</span>
+                      <span className="text-gray-700">
+                        R$ {property.price} x 5 noites
+                      </span>
+                      <span className="text-gray-900">
+                        R$ {property.price * 5}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-700">Taxa de limpeza</span>
@@ -501,10 +578,15 @@ export default function PropertyDetails() {
 
         {/* Similar Properties */}
         <div className="mt-12">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">Propriedades similares</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">
+            Propriedades similares
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {similarProperties.map((similar) => (
-              <Card key={similar.id} className="group hover:shadow-lg transition-shadow">
+              <Card
+                key={similar.id}
+                className="group hover:shadow-lg transition-shadow"
+              >
                 <div className="relative">
                   <Image
                     src={similar.image || "/placeholder.svg"}
@@ -524,13 +606,21 @@ export default function PropertyDetails() {
                 <CardContent className="p-4">
                   <div className="flex items-center space-x-1 mb-2">
                     <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm font-medium">{similar.rating}</span>
+                    <span className="text-sm font-medium">
+                      {similar.rating}
+                    </span>
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2">{similar.title}</h3>
-                  <p className="text-gray-600 text-sm mb-2">{similar.location}</p>
+                  <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2">
+                    {similar.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-2">
+                    {similar.location}
+                  </p>
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-lg font-bold text-gray-900">R$ {similar.price}</span>
+                      <span className="text-lg font-bold text-gray-900">
+                        R$ {similar.price}
+                      </span>
                       <span className="text-gray-500 text-sm">/noite</span>
                     </div>
                     <Button size="sm" variant="outline">
@@ -544,5 +634,5 @@ export default function PropertyDetails() {
         </div>
       </div>
     </div>
-  )
+  );
 }
