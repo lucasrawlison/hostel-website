@@ -93,7 +93,7 @@ export default function Component() {
             </CarouselItem>
             <CarouselItem className="relative h-[600px]">
               <Image
-                src={hero2}
+                src={igrejaBananeiras}
                 alt="Paraíba Hero Image"
                 layout="fill"
                 objectFit="cover"
@@ -103,7 +103,7 @@ export default function Component() {
             </CarouselItem>
             <CarouselItem className="relative h-[600px]">
               <Image
-                src={igrejaBananeiras}
+                src={hero2}
                 alt="Paraíba Hero Image"
                 layout="fill"
                 objectFit="cover"
