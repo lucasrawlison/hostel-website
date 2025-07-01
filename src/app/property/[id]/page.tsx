@@ -258,7 +258,7 @@ export default function PropertyDetails() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
-                    Apartamento inteiro hospedado por {property.host.name}
+                    Casa hospedado por {property.host.name}
                   </h2>
                 </div>
                 <div className="flex items-center space-x-4 text-gray-600 mb-6">

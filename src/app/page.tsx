@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import Autoplay from "embla-carousel-autoplay"
+import Autoplay from "embla-carousel-autoplay";
 
 import hero from "@/imgs/pbHero1.jpeg";
 import hero2 from "@/imgs/pbHero2.jpeg";
@@ -49,12 +49,10 @@ import {
 import React from "react";
 
 export default function Component() {
-
   const plugin = React.useRef(
     Autoplay({ delay: 4000, stopOnInteraction: true })
-  )
-  
-  
+  );
+
   const featuredProperties = [
     {
       id: 1,
@@ -76,10 +74,8 @@ export default function Component() {
       {/* Header */}
 
       {/* Hero Section */}
-        <section className="relative bg-gradient-to-r from-blue-600 via-blue-500 to-orange-400 text-white h-[600px]">
-        <Carousel
-        plugins={[plugin.current]}
-        className="absolute inset-0">
+      <section className="relative bg-gradient-to-r from-blue-600 via-blue-500 to-orange-400 text-white h-[600px]">
+        <Carousel plugins={[plugin.current]} className="absolute inset-0">
           <CarouselContent className="h-full inset-0">
             <CarouselItem className="relative h-[600px]">
               <Image
@@ -311,7 +307,8 @@ export default function Component() {
                           /noite
                         </span>
                       </div>
-                      <Button className="bg-gradient-to-r from-orange-500 to-blue-600 hover:from-orange-600 hover:to-blue-700 text-sm sm:text-base px-3 sm:px-4">
+
+                      <Button className=" hover:cursor-pointer bg-gradient-to-r from-orange-500 to-blue-600 hover:from-orange-600 hover:to-blue-700 text-sm sm:text-base px-3 sm:px-4">
                         Ver Detalhes
                       </Button>
                     </div>
@@ -325,7 +322,7 @@ export default function Component() {
             <Button
               variant="outline"
               size="lg"
-              className="border-orange-200 text-orange-600 hover:bg-orange-50 w-full sm:w-auto"
+              className="border-orange-200 text-orange-600 hover:bg-orange-50 w-full sm:w-auto hover:cursor-pointer"
             >
               Ver Todas as Propriedades
             </Button>
