@@ -1,3 +1,4 @@
+"use client";
 import {
   Search,
   MapPin,
@@ -21,6 +22,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import Autoplay from "embla-carousel-autoplay"
+
+import hero from "@/imgs/pbHero1.jpeg";
+import hero2 from "@/imgs/pbHero2.jpeg";
+import igrejaBananeiras from "@/imgs/igrejaBananeiras.jpg";
 // import {
 //   DropdownMenu,
 //   DropdownMenuContent,
@@ -35,8 +41,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import React from "react";
 
 export default function Component() {
+
+  const plugin = React.useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: true })
+  )
+  
+  
   const featuredProperties = [
     {
       id: 1,
@@ -58,7 +76,43 @@ export default function Component() {
       {/* Header */}
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-blue-600 via-blue-500 to-orange-400 text-white">
+        <section className="relative bg-gradient-to-r from-blue-600 via-blue-500 to-orange-400 text-white h-[600px]">
+        <Carousel
+        plugins={[plugin.current]}
+        className="absolute inset-0">
+          <CarouselContent className="h-full inset-0">
+            <CarouselItem className="relative h-[600px]">
+              <Image
+                src={hero}
+                alt="Paraíba Hero Image"
+                layout="fill"
+                objectFit="cover"
+                className="absolute inset-0 object-cover opacity-50"
+                priority
+              />
+            </CarouselItem>
+            <CarouselItem className="relative h-[600px]">
+              <Image
+                src={hero2}
+                alt="Paraíba Hero Image"
+                layout="fill"
+                objectFit="cover"
+                className="absolute inset-0 object-cover opacity-50"
+                priority
+              />
+            </CarouselItem>
+            <CarouselItem className="relative h-[600px]">
+              <Image
+                src={igrejaBananeiras}
+                alt="Paraíba Hero Image"
+                layout="fill"
+                objectFit="cover"
+                className="absolute inset-0 object-cover opacity-50"
+                priority
+              />
+            </CarouselItem>
+          </CarouselContent>
+        </Carousel>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24">
           <div className="text-center mb-8 sm:mb-12">
