@@ -1,0 +1,162 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Property {
+  id           Int         @id @default(autoincrement())
+  title        String
+  locationMin  String
+  price        Float
+  rating       Float
+  reviewsQtd   Int
+  guests       Int
+  bedrooms     Int
+  bathrooms    Int
+  description  String
+
+  // Relações
+  host         Host        @relation(fields: [hostId], references: [id])
+  hostId       Int
+  location     Location    @relation(fields: [locationId], references: [id])
+  locationId   Int         @unique
+  amenities    Amenity[]
+  rules        Rule[]
+  reviews      Review[]    
+}
+
+model Amenity {
+  id          Int       @id @default(autoincrement())
+  name        String
+  icon        String    // Armazene o nome ou caminho do ícone
+  available   Boolean
+  property    Property  @relation(fields: [propertyId], references: [id])
+  propertyId  Int
+}
+
+model Host {
+  id           Int        @id @default(autoincrement())
+  name         String
+  avatar       String
+  responseTime String
+  languages    String[]
+  verified     Boolean
+  joinedDate   String
+
+  properties   Property[] // Um host pode ter várias propriedades
+}
+
+model Location {
+  id           Int             @id @default(autoincrement())
+  address      String
+  lat          Float
+  lng          Float
+
+  property     Property?       // Uma localização está vinculada a uma propriedade
+  nearbyPlaces NearbyPlace[]
+}
+
+model NearbyPlace {
+  id           Int       @id @default(autoincrement())
+  name         String
+  distance     String
+  type         String
+  location     Location  @relation(fields: [locationId], references: [id])
+  locationId   Int
+}
+
+model Rule {
+  id           Int       @id @default(autoincrement())
+  text         String
+  property     Property  @relation(fields: [propertyId], references: [id])
+  propertyId   Int
+}
+
+model Review {
+  id           Int       @id @default(autoincrement())
+  user         String
+  avatar       String
+  rating       Float
+  date         String
+  comment      String
+
+  // Relação opcional ao usuário registrado
+  reviewerId   Int?      
+  reviewer     User?     @relation("UserReviews", fields: [reviewerId], references: [id])
+
+  property     Property  @relation(fields: [propertyId], references: [id])
+  propertyId   Int
+}
+
+/// Modelo de Usuário para autenticação e perfis
+model User {
+  id             Int       @id @default(autoincrement())
+  name           String
+  email          String    @unique
+  emailVerified  DateTime?
+  password       String
+  avatar         String?
+  role           Role      @default(USER)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Revisões escritas pelo usuário
+  reviews        Review[]  @relation("UserReviews")
+
+  // Relações do NextAuth
+  sessions       Session[]
+  accounts       Account[]
+}
+
+enum Role {
+  USER
+  HOST
+  ADMIN
+}
+
+/// Modelos para integração com NextAuth.js (Opcional)
+model Account {
+  id                 String   @id @default(cuid())
+  userId             Int
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @map("refresh_token")
+  access_token       String?  @map("access_token")
+  expires_at         Int?     @map("expires_at")
+  token_type         String?  @map("token_type")
+  scope              String?
+  id_token           String?  @map("id_token")
+  session_state      String?  @map("session_state")
+  oauth_token_secret String?  @map("oauth_token_secret")
+  oauth_token        String?  @map("oauth_token")
+
+  user               User     @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier  String
+  token       String   @unique
+  expires     DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
