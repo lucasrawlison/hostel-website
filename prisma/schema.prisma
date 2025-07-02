@@ -7,35 +7,44 @@ generator client {
   provider = "prisma-client-js"
 }
 
+/// Modelos de domínio sem auditoria embutida
 model Property {
-  id           Int         @id @default(autoincrement())
-  title        String
-  locationMin  String
-  price        Float
-  rating       Float
-  reviewsQtd   Int
-  guests       Int
-  bedrooms     Int
-  bathrooms    Int
-  description  String
+  id          Int        @id @default(autoincrement())
+  title       String
+  locationMin String
+  price       Float
+  rating      Float
+  reviewsQtd  Int
+  guests      Int
+  bedrooms    Int
+  bathrooms   Int
+  description String
 
-  // Relações
-  host         Host        @relation(fields: [hostId], references: [id])
-  hostId       Int
-  location     Location    @relation(fields: [locationId], references: [id])
-  locationId   Int         @unique
-  amenities    Amenity[]
-  rules        Rule[]
-  reviews      Review[]    
+  host        Host       @relation(fields: [hostId], references: [id])
+  hostId      Int
+  location    Location   @relation(fields: [locationId], references: [id])
+  locationId  Int @unique
+  amenities   Amenity[]
+  rules       Rule[]
+  reviews     Review[]
+  photos      Photo[]
+}
+
+model Photo {
+  id         Int      @id @default(autoincrement())
+  url        String   // Link da foto
+  caption    String?
+  property   Property @relation(fields: [propertyId], references: [id])
+  propertyId Int
 }
 
 model Amenity {
-  id          Int       @id @default(autoincrement())
-  name        String
-  icon        String    // Armazene o nome ou caminho do ícone
-  available   Boolean
-  property    Property  @relation(fields: [propertyId], references: [id])
-  propertyId  Int
+  id         Int      @id @default(autoincrement())
+  name       String
+  icon       String   // Nome ou caminho do ícone
+  available  Boolean
+  property   Property @relation(fields: [propertyId], references: [id])
+  propertyId Int
 }
 
 model Host {
@@ -44,99 +53,84 @@ model Host {
   avatar       String
   responseTime String
   languages    String[]
-  verified     Boolean
-  joinedDate   String
-
-  properties   Property[] // Um host pode ter várias propriedades
+  properties   Property[]
 }
 
 model Location {
-  id           Int             @id @default(autoincrement())
+  id           Int           @id @default(autoincrement())
   address      String
   lat          Float
   lng          Float
-
-  property     Property?       // Uma localização está vinculada a uma propriedade
+  property     Property?
   nearbyPlaces NearbyPlace[]
 }
 
 model NearbyPlace {
-  id           Int       @id @default(autoincrement())
-  name         String
-  distance     String
-  type         String
-  location     Location  @relation(fields: [locationId], references: [id])
-  locationId   Int
+  id         Int      @id @default(autoincrement())
+  name       String
+  distance   String
+  type       String
+  location   Location @relation(fields: [locationId], references: [id])
+  locationId Int
 }
 
 model Rule {
-  id           Int       @id @default(autoincrement())
-  text         String
-  property     Property  @relation(fields: [propertyId], references: [id])
-  propertyId   Int
+  id         Int      @id @default(autoincrement())
+  text       String
+  property   Property @relation(fields: [propertyId], references: [id])
+  propertyId Int
 }
 
 model Review {
-  id           Int       @id @default(autoincrement())
-  user         String
-  avatar       String
-  rating       Float
-  date         String
-  comment      String
-
-  // Relação opcional ao usuário registrado
-  reviewerId   Int?      
-  reviewer     User?     @relation("UserReviews", fields: [reviewerId], references: [id])
-
-  property     Property  @relation(fields: [propertyId], references: [id])
-  propertyId   Int
+  id         Int      @id @default(autoincrement())
+  user       String   // Nome do usuário para guest reviews
+  avatar     String
+  rating     Float
+  date       String
+  comment    String
+  reviewer   User?    @relation("UserReviews", fields: [reviewerId], references: [id])
+  reviewerId Int?
+  property   Property @relation(fields: [propertyId], references: [id])
+  propertyId Int
 }
 
-/// Modelo de Usuário para autenticação e perfis
+/// Usuários e autenticação
 model User {
-  id             Int       @id @default(autoincrement())
-  name           String
-  email          String    @unique
-  emailVerified  DateTime?
-  password       String
-  avatar         String?
-  role           Role      @default(USER)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-
-  // Revisões escritas pelo usuário
-  reviews        Review[]  @relation("UserReviews")
-
-  // Relações do NextAuth
-  sessions       Session[]
-  accounts       Account[]
+  id            Int       @id @default(autoincrement())
+  name          String
+  email         String    @unique
+  emailVerified DateTime?
+  password      String
+  avatar        String?
+  role          Role      @default(USER)
+  sessions      Session[]
+  accounts      Account[]
+  reviews       Review[]  @relation("UserReviews")
+  auditLogs     AuditLog[]
 }
-
 enum Role {
   USER
   HOST
   ADMIN
 }
 
-/// Modelos para integração com NextAuth.js (Opcional)
+/// NextAuth.js Models
 model Account {
-  id                 String   @id @default(cuid())
-  userId             Int
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @map("refresh_token")
-  access_token       String?  @map("access_token")
-  expires_at         Int?     @map("expires_at")
-  token_type         String?  @map("token_type")
-  scope              String?
-  id_token           String?  @map("id_token")
-  session_state      String?  @map("session_state")
-  oauth_token_secret String?  @map("oauth_token_secret")
-  oauth_token        String?  @map("oauth_token")
-
-  user               User     @relation(fields: [userId], references: [id])
-
+  id                String   @id @default(cuid())
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?  @map("refresh_token")
+  access_token      String?  @map("access_token")
+  expires_at        Int?     @map("expires_at")
+  token_type        String?  @map("token_type")
+  scope             String?
+  id_token          String?  @map("id_token")
+  session_state     String?  @map("session_state")
+  oauth_token_secret String? @map("oauth_token_secret")
+  oauth_token       String?  @map("oauth_token")
+  user              User     @relation(fields: [userId], references: [id])
   @@unique([provider, providerAccountId])
   @@map("accounts")
 }
@@ -146,17 +140,31 @@ model Session {
   sessionToken String   @unique
   userId       Int
   expires      DateTime
-
   user         User     @relation(fields: [userId], references: [id])
-
   @@map("sessions")
 }
 
 model VerificationToken {
-  identifier  String
-  token       String   @unique
-  expires     DateTime
-
+  identifier String
+  token      String   @unique
+  expires    DateTime
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+/// Modelo centralizado de auditoria
+model AuditLog {
+  id        Int         @id @default(autoincrement())
+  model     String      // Nome do modelo auditado (ex: "Property")
+  recordId  Int         // ID do registro afetado
+  action    AuditAction // CREATE, UPDATE, DELETE
+  userId    Int?        // Usuário que realizou a ação
+  user      User?       @relation(fields: [userId], references: [id])
+  changes   Json        // Payload com dados alterados ou snapshot
+  timestamp DateTime    @default(now())
+}
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
 }

@@ -73,8 +73,8 @@ export default function PropertyDetails() {
       avatar: "/placeholder.svg?height=100&width=100",
       responseTime: "Responde em 1 hora",
       languages: ["Português", "Inglês", "Espanhol"],
-      verified: true,
-      joinedDate: "Membro desde 2019",
+      // verified: true,
+      // joinedDate: "Membro desde 2019",
     },
     location: {
       address: "Bananeiras, Paraíba, Brasil",
