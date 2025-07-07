@@ -13,10 +13,10 @@ import {
   Award,
   Phone,
   Mail,
+  LoaderCircle,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import CasaBananeiras1 from "@/imgs/properties/1/casa-bananeiras.jpg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -25,13 +25,7 @@ import Autoplay from "embla-carousel-autoplay";
 import hero from "@/imgs/pbHero1.jpeg";
 import hero2 from "@/imgs/pbHero2.jpeg";
 import igrejaBananeiras from "@/imgs/igrejaBananeiras.jpg";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
+import imgPlaceholder from "@/imgs/placeholder.svg";
 import {
   Select,
   SelectContent,
@@ -44,30 +38,51 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios, { isAxiosError } from "axios";
 
 export default function Component() {
-  const plugin = React.useRef(
-    Autoplay({ delay: 4000})
-  );
+  const plugin = React.useRef(Autoplay({ delay: 4000 }));
 
+  interface Property {
+    id: number;
+    title: string;
+    image: string;
+    locationMin: string;
+    price: string;
+    rating: number;
+    reviewsQtd: number;
+    guests: number;
+    bedrooms: number;
+    bathrooms: number;
+    amenities: string[];
+  }
 
+  const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
+  const [isLoadingFeaturedProperties, setIsLoadingFeaturedProperties] =
+    useState(true);
 
-  const featuredProperties = [
-    {
-      id: 1,
-      title: "Casa com primeiro andar - Bananeiras",
-      location: "Bananeiras, Paraíba",
-      price: "R$ 180",
-      rating: 4.8,
-      reviews: 124,
-      image: CasaBananeiras1,
-      amenities: ["Wifi", "Ar Condicionado", "Vista para o Mar", "Piscina"],
-      guests: 4,
-      bedrooms: 2,
-      bathrooms: 2,
-    },
-  ];
+  const getFeaturedProperties = async () => {
+    setIsLoadingFeaturedProperties(true);
+    try {
+      const response = await axios.get("/api/getFeaturedProperties");
+      if (response.status === 200) {
+        const data = response.data.featuredProperties;
+
+        setFeaturedProperties(data);
+        setIsLoadingFeaturedProperties(false);
+      }
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.error("Error fetching featured properties:", error.message);
+      }
+      setIsLoadingFeaturedProperties(false);
+    }
+  };
+
+  useEffect(() => {
+    getFeaturedProperties();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-blue-50">
@@ -76,8 +91,10 @@ export default function Component() {
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-blue-600 via-blue-500 to-orange-400 text-white h-[600px]">
         <Carousel
-        opts={{loop:true}}
-        plugins={[plugin.current]} className="absolute inset-0">
+          opts={{ loop: true }}
+          plugins={[plugin.current]}
+          className="absolute inset-0"
+        >
           <CarouselContent className="h-full inset-0">
             <CarouselItem className="relative h-[600px]">
               <Image
@@ -134,7 +151,6 @@ export default function Component() {
                 <div className="relative">
                   <MapPin className="absolute left-3 top-3 w-5 h-5 text-white sm:text-black" />
                   <Input
-                  
                     placeholder="Paraíba, Paraíba"
                     className=" placeholder:text-white pl-10 h-12 text-white sm:placeholder:text-black border-gray-200 focus:border-orange-400 focus:ring-orange-400"
                   />
@@ -156,15 +172,10 @@ export default function Component() {
                 <label className="block text-sm font-medium text-white mb-2 sm:text-black">
                   Hóspedes
                 </label>
-                <Select
-                
-                >
-                  <SelectTrigger
-                  
-                  className="w-full sm: text-white sm:text-black border-gray-200 focus:border-orange-400 focus:ring-orange-400">
+                <Select>
+                  <SelectTrigger className="w-full sm: text-white sm:text-black border-gray-200 focus:border-orange-400 focus:ring-orange-400">
                     <Users className="w-5 h-5 text-white mr-2 sm:text-black" />
-                    <SelectValue
-                     placeholder="2 hóspedes" />
+                    <SelectValue placeholder="2 hóspedes" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="1">1 hóspede</SelectItem>
@@ -240,91 +251,102 @@ export default function Component() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {featuredProperties.map((property) => (
-              <Link key={property.id} href={"/property/" + property.id}>
-                <Card className="hover:cursor-pointer group hover:shadow-xl transition-all duration-300 border-orange-100 hover:border-orange-200 overflow-hidden">
-                  <div className="relative">
-                    <Image
-                      src={property.image || "/placeholder.svg"}
-                      alt={property.title}
-                      width={400}
-                      height={300}
-                      className="w-full h-48 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="absolute top-3 right-3 bg-white/80 hover:bg-white text-gray-700 hover:text-red-500 w-8 h-8 p-0"
-                    >
-                      <Heart className="w-4 h-4" />
-                    </Button>
-                    <Badge className="absolute top-3 left-3 bg-orange-500 hover:bg-orange-600 text-xs">
-                      Destaque
-                    </Badge>
-                  </div>
-                  <CardContent className="p-4 sm:p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center space-x-1">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm font-medium text-gray-900">
-                          {property.rating}
-                        </span>
-                        <span className="text-xs sm:text-sm text-gray-500">
-                          ({property.reviews} avaliações)
-                        </span>
-                      </div>
-                    </div>
-                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors line-clamp-2">
-                      {property.title}
-                    </h3>
-                    <p className="text-sm sm:text-base text-gray-600 mb-3 flex items-center">
-                      <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
-                      <span className="truncate">{property.location}</span>
-                    </p>
-                    <div className="flex items-center text-xs sm:text-sm text-gray-500 mb-4 space-x-3 sm:space-x-4">
-                      <span>{property.guests} hóspedes</span>
-                      <span>{property.bedrooms} quartos</span>
-                      <span>{property.bathrooms} banheiros</span>
-                    </div>
-                    <div className="flex flex-wrap gap-1 sm:gap-2 mb-4">
-                      {property.amenities.slice(0, 2).map((amenity, index) => (
-                        <Badge
-                          key={index}
-                          variant="secondary"
-                          className="text-xs bg-blue-50 text-blue-700 hover:bg-blue-100"
+          {isLoadingFeaturedProperties ? (
+            <div className="min-w-full min-h-[489px] flex justify-center items-center">
+              <LoaderCircle size={25} className=" text-gray-500 animate-spin" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {featuredProperties.length > 0 &&
+                featuredProperties.map((property) => (
+                  <Link key={property.id} href={"/property/" + property.id}>
+                    <Card className="hover:cursor-pointer group hover:shadow-xl transition-all duration-300 border-orange-100 hover:border-orange-200 overflow-hidden">
+                      <div className="relative">
+                        <Image
+                          src={imgPlaceholder}
+                          alt={property.title}
+                          width={400}
+                          height={300}
+                          className="w-full h-48 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="absolute top-3 right-3 bg-white/80 hover:bg-white text-gray-700 hover:text-red-500 w-8 h-8 p-0"
                         >
-                          {amenity}
+                          <Heart className="w-4 h-4" />
+                        </Button>
+                        <Badge className="absolute top-3 left-3 bg-orange-500 hover:bg-orange-600 text-xs">
+                          Destaque
                         </Badge>
-                      ))}
-                      {property.amenities.length > 2 && (
-                        <Badge
-                          variant="secondary"
-                          className="text-xs bg-gray-100 text-gray-600"
-                        >
-                          +{property.amenities.length - 2} mais
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-xl sm:text-2xl font-bold text-gray-900">
-                          {property.price}
-                        </span>
-                        <span className="text-sm sm:text-base text-gray-500">
-                          /noite
-                        </span>
                       </div>
+                      <CardContent className="p-4 sm:p-6">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-1">
+                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                            <span className="text-sm font-medium text-gray-900">
+                              {property.rating}
+                            </span>
+                            <span className="text-xs sm:text-sm text-gray-500">
+                              ({property.reviewsQtd} avaliações)
+                            </span>
+                          </div>
+                        </div>
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors line-clamp-2">
+                          {property.title}
+                        </h3>
+                        <p className="text-sm sm:text-base text-gray-600 mb-3 flex items-center">
+                          <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
+                          <span className="truncate">
+                            {property.locationMin}
+                          </span>
+                        </p>
+                        <div className="flex items-center text-xs sm:text-sm text-gray-500 mb-4 space-x-3 sm:space-x-4">
+                          <span>{property.guests} hóspedes</span>
+                          <span>{property.bedrooms} quartos</span>
+                          <span>{property.bathrooms} banheiros</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1 sm:gap-2 mb-4">
+                          {property.amenities
+                            .slice(0, 2)
+                            .map((amenity, index) => (
+                              <Badge
+                                key={index}
+                                variant="secondary"
+                                className="text-xs bg-blue-50 text-blue-700 hover:bg-blue-100"
+                              >
+                                {amenity}
+                              </Badge>
+                            ))}
+                          {property.amenities.length > 2 && (
+                            <Badge
+                              variant="secondary"
+                              className="text-xs bg-gray-100 text-gray-600"
+                            >
+                              +{property.amenities.length - 2} mais
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="text-xl sm:text-2xl font-bold text-gray-900">
+                              {property.price}
+                            </span>
+                            <span className="text-sm sm:text-base text-gray-500">
+                              /noite
+                            </span>
+                          </div>
 
-                      <Button className=" hover:cursor-pointer bg-gradient-to-r from-orange-500 to-blue-600 hover:from-orange-600 hover:to-blue-700 text-sm sm:text-base px-3 sm:px-4">
-                        Ver Detalhes
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
+                          <Button className=" hover:cursor-pointer bg-gradient-to-r from-orange-500 to-blue-600 hover:from-orange-600 hover:to-blue-700 text-sm sm:text-base px-3 sm:px-4">
+                            Ver Detalhes
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+            </div>
+          )}
 
           <div className="text-center mt-8 sm:mt-12">
             <Button

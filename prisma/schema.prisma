@@ -19,6 +19,9 @@ model Property {
   bedrooms    Int
   bathrooms   Int
   description String
+  featured   Boolean    @default(false)
+  image      String @default("https://placehold.co/600x400?text=No+Image&font=roboto") 
+   // URL da imagem principal
 
   host        Host       @relation(fields: [hostId], references: [id])
   hostId      Int
@@ -28,6 +31,8 @@ model Property {
   rules       Rule[]
   reviews     Review[]
   photos      Photo[]
+  nearbyPlaces NearbyPlace[]
+
 }
 
 model Photo {
@@ -62,7 +67,6 @@ model Location {
   lat          Float
   lng          Float
   property     Property?
-  nearbyPlaces NearbyPlace[]
 }
 
 model NearbyPlace {
@@ -70,7 +74,7 @@ model NearbyPlace {
   name       String
   distance   String
   type       String
-  location   Location @relation(fields: [locationId], references: [id])
+  property   Property @relation(fields: [locationId], references: [id])
   locationId Int
 }
 
