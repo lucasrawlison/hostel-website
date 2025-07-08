@@ -35,6 +35,9 @@ import { Property } from "@/app/types/property";
 import axios, { isAxiosError } from "axios";
 import { useParams } from "next/navigation";
 import formatarEmReal from "@/app/utils/formatarEmReal";
+import { Input } from "@/components/ui/input";
+import Calendar22 from "@/components/datePicker"
+import diferencaEmDias from "@/app/utils/diferençaDias";
 
 export default function PropertyDetails() {
   const { id } = useParams();
@@ -42,6 +45,8 @@ export default function PropertyDetails() {
   const MapVis = dynamic(() => import("@/app/utils/map"), { ssr: false });
   const [property, setProperty] = useState<Property | undefined>(undefined);
   const [isLoagingProperty, setIsLoadingProperty] = useState<boolean>(true);
+  const [date1, setDate1] = useState<Date | undefined>(undefined);
+  const [date2, setDate2] = useState<Date | undefined>(undefined);
   const similarProperties = [
     {
       id: 2,
@@ -88,9 +93,21 @@ export default function PropertyDetails() {
     }
   };
 
+  useEffect(()=> {
+    if (date1 && date2) {
+      if (date1 > date2) {
+        setDate2(undefined);
+      }
+    }
+
+
+  }, [date1, date2]);
+
   useEffect(() => {
     getPropertyById();
   }, []);
+
+
   if (property) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -443,14 +460,10 @@ export default function PropertyDetails() {
 
                     <div className="space-y-4 mb-6">
                       <div className="grid grid-cols-2 gap-2">
-                        {/* <div className="border border-gray-300 rounded-lg p-3">
-                          <label className="block text-xs font-medium text-gray-700 mb-1">CHECK-IN</label>
-                          <Input placeholder="dd/mm/aaaa" className="border-0 p-0 text-sm" />
-                        </div>
-                        <div className="border border-gray-300 rounded-lg p-3">
-                          <label className="block text-xs font-medium text-gray-700 mb-1">CHECK-OUT</label>
-                          <Input placeholder="dd/mm/aaaa" className="border-0 p-0 text-sm" />
-                        </div> */}
+                          <Calendar22 title="Data de ida" date={date1} onChange={setDate1}/>
+                        
+                          <Calendar22 title="Data da volta" date1={date1} date={date2} onChange={setDate2}/>
+                        
                       </div>
                       <div className="border border-gray-300 rounded-lg p-3">
                         <label className="block text-xs font-medium text-gray-700 mb-1">
@@ -477,28 +490,31 @@ export default function PropertyDetails() {
                     <p className="text-center text-sm text-gray-500 mb-4">
                       Você ainda não será cobrado
                     </p>
+                    <p className="w-full text-center text-sm text-gray-500 mb-4">
 
+{date1?.toLocaleDateString() + " até " + date2?.toLocaleDateString()}
+                    </p>
                     <div className="space-y-3 text-sm">
                       <div className="flex justify-between">
                         <span className="text-gray-700">
-                          R$ {property.price} x 5 noites
+                          R$ {property.price} x {diferencaEmDias(date1, date2)} noites
                         </span>
                         <span className="text-gray-900">
-                          R$ {property.price * 5}
+                          R$ {property.price * diferencaEmDias(date1, date2)}
                         </span>
                       </div>
-                      <div className="flex justify-between">
+                      {/* <div className="flex justify-between">
                         <span className="text-gray-700">Taxa de limpeza</span>
                         <span className="text-gray-900">R$ 50</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-700">Taxa de serviço</span>
                         <span className="text-gray-900">R$ 89</span>
-                      </div>
+                      </div> */}
                       <Separator />
                       <div className="flex justify-between font-semibold">
                         <span>Total</span>
-                        <span>R$ {property.price * 5 + 50 + 89}</span>
+                        <span>R$ {property.price * diferencaEmDias(date1, date2)}</span>
                       </div>
                     </div>
                   </CardContent>
