@@ -26,6 +26,9 @@ import hero from "@/imgs/pbHero1.jpeg";
 import hero2 from "@/imgs/pbHero2.jpeg";
 import igrejaBananeiras from "@/imgs/igrejaBananeiras.jpg";
 import imgPlaceholder from "@/imgs/placeholder.svg";
+import formatarEmReal from "@/app/utils/formatarEmReal";
+import CasaBananeiras1 from "@/imgs/properties/1/casa-bananeiras.jpg";
+
 import {
   Select,
   SelectContent,
@@ -40,22 +43,30 @@ import {
 } from "@/components/ui/carousel";
 import React, { useEffect, useState } from "react";
 import axios, { isAxiosError } from "axios";
+import { Amenity } from "@prisma/client";
 
 export default function Component() {
   const plugin = React.useRef(Autoplay({ delay: 4000 }));
+
+  interface Amenity {
+    id: number;
+    name: string; // Nome do ícone ou recurso
+    icon: string; // Caminho ou nome do ícone
+    properties?: Property[]; // Propriedades associadas a este recurso
+  }
 
   interface Property {
     id: number;
     title: string;
     image: string;
     locationMin: string;
-    price: string;
+    price: number;
     rating: number;
     reviewsQtd: number;
     guests: number;
     bedrooms: number;
     bathrooms: number;
-    amenities: string[];
+    amenities: Amenity[];
   }
 
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
@@ -151,23 +162,13 @@ export default function Component() {
                 <div className="relative">
                   <MapPin className="absolute left-3 top-3 w-5 h-5 text-white sm:text-black" />
                   <Input
+                    disabled
                     placeholder="Paraíba, Paraíba"
                     className=" placeholder:text-white pl-10 h-12 text-white sm:placeholder:text-black border-gray-200 focus:border-orange-400 focus:ring-orange-400"
                   />
                 </div>
               </div>
-              {/* <div className="sm:col-span-1 lg:col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Check-in / Check-out
-                </label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                  <Input
-                    placeholder="Selecionar datas"
-                    className="pl-10 h-12 border-gray-200 focus:border-orange-400 focus:ring-orange-400"
-                  />
-                </div>
-              </div> */}
+
               <div className="">
                 <label className="block text-sm font-medium text-white mb-2 sm:text-black">
                   Hóspedes
@@ -263,7 +264,7 @@ export default function Component() {
                     <Card className="hover:cursor-pointer group hover:shadow-xl transition-all duration-300 border-orange-100 hover:border-orange-200 overflow-hidden">
                       <div className="relative">
                         <Image
-                          src={imgPlaceholder}
+                          src={CasaBananeiras1}
                           alt={property.title}
                           width={400}
                           height={300}
@@ -315,7 +316,7 @@ export default function Component() {
                                 variant="secondary"
                                 className="text-xs bg-blue-50 text-blue-700 hover:bg-blue-100"
                               >
-                                {amenity}
+                                {amenity.name}
                               </Badge>
                             ))}
                           {property.amenities.length > 2 && (
@@ -330,7 +331,7 @@ export default function Component() {
                         <div className="flex items-center justify-between">
                           <div>
                             <span className="text-xl sm:text-2xl font-bold text-gray-900">
-                              {property.price}
+                              {formatarEmReal(property.price)}
                             </span>
                             <span className="text-sm sm:text-base text-gray-500">
                               /noite
@@ -349,13 +350,15 @@ export default function Component() {
           )}
 
           <div className="text-center mt-8 sm:mt-12">
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-orange-200 text-orange-600 hover:bg-orange-50 w-full sm:w-auto hover:cursor-pointer"
-            >
-              Ver Todas as Propriedades
-            </Button>
+            <Link href="/properties">
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-orange-200 text-orange-600 hover:bg-orange-50 w-full sm:w-auto hover:cursor-pointer"
+              >
+                Ver Todas as Propriedades
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -421,144 +424,6 @@ export default function Component() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            <div className="sm:col-span-2 lg:col-span-1">
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-blue-500 rounded-lg flex items-center justify-center">
-                  <Waves className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xl font-bold">A definir</span>
-              </div>
-              <p className="text-gray-400 mb-4 text-sm sm:text-base">
-                Sua melhor opção para aluguéis na Paraíba. Descubra a cidade
-                onde o sol nasce primeiro.
-              </p>
-              <div className="flex space-x-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-400 hover:text-white p-2"
-                >
-                  <Mail className="w-5 h-5" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-400 hover:text-white p-2"
-                >
-                  <Phone className="w-5 h-5" />
-                </Button>
-              </div>
-            </div>
-            <div>
-              <h3 className="text-base sm:text-lg font-semibold mb-4">
-                Propriedades
-              </h3>
-              <ul className="space-y-2 text-gray-400 text-sm sm:text-base">
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Tambaú
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Cabo Branco
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Manaíra
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Bessa
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Centro Histórico
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-base sm:text-lg font-semibold mb-4">
-                Suporte
-              </h3>
-              <ul className="space-y-2 text-gray-400 text-sm sm:text-base">
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Central de Ajuda
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Contato
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Cancelamento
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Segurança
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Termos de Uso
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-base sm:text-lg font-semibold mb-4">
-                Empresa
-              </h3>
-              <ul className="space-y-2 text-gray-400 text-sm sm:text-base">
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Sobre Nós
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Carreiras
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Imprensa
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Anuncie
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white">
-                    Parceiros
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-gray-400">
-            <p className="text-sm sm:text-base">
-              &copy; 2025 A definir. Todos os direitos reservados.
-            </p>
-            <p className="text-sm sm:text-base">&copy; Developed by FIGO.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

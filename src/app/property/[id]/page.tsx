@@ -36,8 +36,9 @@ import axios, { isAxiosError } from "axios";
 import { useParams } from "next/navigation";
 import formatarEmReal from "@/app/utils/formatarEmReal";
 import { Input } from "@/components/ui/input";
-import Calendar22 from "@/components/datePicker"
+import Calendar22 from "@/components/datePicker";
 import diferencaEmDias from "@/app/utils/diferençaDias";
+import imgPlaceholder from "@/imgs/placeholder.svg";
 
 export default function PropertyDetails() {
   const { id } = useParams();
@@ -47,6 +48,7 @@ export default function PropertyDetails() {
   const [isLoagingProperty, setIsLoadingProperty] = useState<boolean>(true);
   const [date1, setDate1] = useState<Date | undefined>(undefined);
   const [date2, setDate2] = useState<Date | undefined>(undefined);
+  const [guests, setGuests] = useState<number>(1);
   const similarProperties = [
     {
       id: 2,
@@ -93,20 +95,17 @@ export default function PropertyDetails() {
     }
   };
 
-  useEffect(()=> {
+  useEffect(() => {
     if (date1 && date2) {
       if (date1 > date2) {
         setDate2(undefined);
       }
     }
-
-
   }, [date1, date2]);
 
   useEffect(() => {
     getPropertyById();
   }, []);
-
 
   if (property) {
     return (
@@ -127,7 +126,7 @@ export default function PropertyDetails() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-gray-600 hover:text-orange-600"
+                  className="hover:cursor-pointer text-gray-600 hover:text-orange-600"
                 >
                   <Share className="w-4 h-4 sm:mr-2" />
                   <span className="hidden sm:inline">Compartilhar</span>
@@ -135,7 +134,7 @@ export default function PropertyDetails() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-gray-600 hover:text-red-500"
+                  className="hover:cursor-pointer text-gray-600 hover:text-red-500"
                 >
                   <Heart className="w-4 h-4 sm:mr-2" />
                   <span className="hidden sm:inline">Salvar</span>
@@ -270,7 +269,13 @@ export default function PropertyDetails() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 pt-0">
-                  <div className={`grid grid-cols-1 ${property.amenities.length === 0 ? ("sm:grid-cols-1") : ("sm:grid-cols-2")} gap-4`}>
+                  <div
+                    className={`grid grid-cols-1 ${
+                      property.amenities.length === 0
+                        ? "sm:grid-cols-1"
+                        : "sm:grid-cols-2"
+                    } gap-4`}
+                  >
                     {property.amenities.length > 0 ? (
                       <>
                         {property.amenities.map((amenity, index) => (
@@ -278,12 +283,17 @@ export default function PropertyDetails() {
                             key={index}
                             className="flex items-center space-x-3"
                           >
+                            <Image
+                              src={amenity.icon || imgPlaceholder}
+                              alt={amenity.name}
+                              width={12}
+                              height={12}
+                              className="w-4 h-4"
+                            />
                             <span className="text-gray-700">
                               {amenity.name}
                             </span>
-                            {amenity.available && (
-                              <CheckCircle className="w-4 h-4 text-green-500 ml-auto" />
-                            )}
+                              <CheckCircle className="w-4 h-4 text-green-500 " />
                           </div>
                         ))}
                       </>
@@ -318,21 +328,23 @@ export default function PropertyDetails() {
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                    
-                    {property.nearbyPlaces.length > 0 && property.nearbyPlaces.map((place, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                      >
-                        <div>
-                          <p className="font-medium text-gray-900">
-                            {place.name}
-                          </p>
-                          <p className="text-sm text-gray-600">{place.type}</p>
+                    {property.nearbyPlaces.length > 0 &&
+                      property.nearbyPlaces.map((place, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                        >
+                          <div>
+                            <p className="font-medium text-gray-900">
+                              {place.name}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              {place.type}
+                            </p>
+                          </div>
+                          <Badge variant="secondary">{place.distance}</Badge>
                         </div>
-                        <Badge variant="secondary">{place.distance}</Badge>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 </CardContent>
               </Card>
@@ -460,44 +472,69 @@ export default function PropertyDetails() {
 
                     <div className="space-y-4 mb-6">
                       <div className="grid grid-cols-2 gap-2">
-                          <Calendar22 title="Data de ida" date={date1} onChange={setDate1}/>
-                        
-                          <Calendar22 title="Data da volta" date1={date1} date={date2} onChange={setDate2}/>
-                        
+                        <Calendar22
+                          title="Check-in"
+                          date={date1}
+                          onChange={setDate1}
+                        />
+
+                        <Calendar22
+                          title="Check-out"
+                          date1={date1}
+                          date={date2}
+                          onChange={setDate2}
+                        />
                       </div>
                       <div className="border border-gray-300 rounded-lg p-3">
                         <label className="block text-xs font-medium text-gray-700 mb-1">
                           HÓSPEDES
                         </label>
-                        <Select>
+                        <Select defaultValue={(guests-1).toString()} onValueChange={(value) => setGuests(parseInt(value)+1)}>
                           <SelectTrigger className="border-0 p-0 text-sm">
-                            <SelectValue placeholder="1 hóspede" />
+                            <SelectValue placeholder="Selecione" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="1">1 hóspede</SelectItem>
-                            <SelectItem value="2">2 hóspedes</SelectItem>
-                            <SelectItem value="3">3 hóspedes</SelectItem>
-                            <SelectItem value="4">4 hóspedes</SelectItem>
+                            {[...Array(property.guests)].map((_, index) => (
+                              <SelectItem key={index} value={index.toString()}>
+                                {index + 1} hóspede{index > 0 && "s"}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </div>
                     </div>
 
-                    <Button className=" hover:cursor-pointer w-full h-12 bg-gradient-to-r from-orange-500 to-blue-600 hover:from-orange-600 hover:to-blue-700 text-white font-semibold mb-4">
-                      Reservar
-                    </Button>
+                    <Link
+                      target="_blank"
+                      href={`https://wa.me/55${
+                        property.host.phone
+                      }?text=Olá%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20aluguel%20da%20${
+                        property.title
+                      }.${date1 && date2 ? `%0A%0ADe%20${date1.toLocaleDateString()}%20até%20${date2.toLocaleDateString()}` : ""}
+                      ${guests > 1 ? `%0A%0APara%20${guests} hóspedes` : ""}
+
+`}
+                    >
+                      <Button className=" hover:cursor-pointer w-full h-12 bg-gradient-to-r from-orange-500 to-blue-600 hover:from-orange-600 hover:to-blue-700 text-white font-semibold mb-4">
+                        Solicitar reserva
+                      </Button>
+                    </Link>
 
                     <p className="text-center text-sm text-gray-500 mb-4">
                       Você ainda não será cobrado
                     </p>
                     <p className="w-full text-center text-sm text-gray-500 mb-4">
-
-{date1?.toLocaleDateString() + " até " + date2?.toLocaleDateString()}
+                      {date1 &&
+                        date2 &&
+                        date1?.toLocaleDateString() +
+                          " até " +
+                          date2?.toLocaleDateString()}
                     </p>
                     <div className="space-y-3 text-sm">
                       <div className="flex justify-between">
                         <span className="text-gray-700">
-                          R$ {property.price} x {diferencaEmDias(date1, date2)} noites
+                          R$ {property.price} x {diferencaEmDias(date1, date2)}{" "}
+                          noites
                         </span>
                         <span className="text-gray-900">
                           R$ {property.price * diferencaEmDias(date1, date2)}
@@ -514,7 +551,9 @@ export default function PropertyDetails() {
                       <Separator />
                       <div className="flex justify-between font-semibold">
                         <span>Total</span>
-                        <span>R$ {property.price * diferencaEmDias(date1, date2)}</span>
+                        <span>
+                          R$ {property.price * diferencaEmDias(date1, date2)}
+                        </span>
                       </div>
                     </div>
                   </CardContent>
@@ -565,7 +604,7 @@ export default function PropertyDetails() {
           {/* Similar Properties */}
           <div className="mt-12">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">
-              Propriedades similares
+              Propriedades em destaque
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {similarProperties.map((similar) => (
@@ -575,7 +614,7 @@ export default function PropertyDetails() {
                 >
                   <div className="relative">
                     <Image
-                      src={similar.image || "/placeholder.svg"}
+                      src={imgPlaceholder}
                       alt={similar.title}
                       width={300}
                       height={200}

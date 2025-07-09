@@ -9,7 +9,7 @@ generator client {
 
 /// Modelos de domínio sem auditoria embutida
 model Property {
-  id          Int        @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   title       String
   locationMin String
   price       Float
@@ -19,37 +19,34 @@ model Property {
   bedrooms    Int
   bathrooms   Int
   description String
-  featured   Boolean    @default(false)
-  image      String @default("https://placehold.co/600x400?text=No+Image&font=roboto") 
-   // URL da imagem principal
+  featured    Boolean @default(false)
+  image       String  @default("https://placehold.co/600x400?text=No+Image&font=roboto")
+  // URL da imagem principal
 
-  host        Host       @relation(fields: [hostId], references: [id])
-  hostId      Int
-  location    Location   @relation(fields: [locationId], references: [id])
-  locationId  Int @unique
-  amenities   Amenity[]
-  rules       Rule[]
-  reviews     Review[]
-  photos      Photo[]
+  host         Host          @relation(fields: [hostId], references: [id])
+  hostId       Int
+  location     Location      @relation(fields: [locationId], references: [id])
+  locationId   Int           @unique
+  amenities    Amenity[]     @relation("PropertyAmenities")
+  rules        Rule[]
+  reviews      Review[]
+  photos       Photo[]
   nearbyPlaces NearbyPlace[]
-
 }
 
 model Photo {
   id         Int      @id @default(autoincrement())
-  url        String   // Link da foto
+  url        String // Link da foto
   caption    String?
   property   Property @relation(fields: [propertyId], references: [id])
   propertyId Int
 }
 
 model Amenity {
-  id         Int      @id @default(autoincrement())
+  id         Int        @id @default(autoincrement())
   name       String
-  icon       String   // Nome ou caminho do ícone
-  available  Boolean
-  property   Property @relation(fields: [propertyId], references: [id])
-  propertyId Int
+  icon       String // Nome ou caminho do ícone
+  properties Property[] @relation("PropertyAmenities")
 }
 
 model Host {
@@ -57,16 +54,17 @@ model Host {
   name         String
   avatar       String
   responseTime String
+  phone        String
   languages    String[]
   properties   Property[]
 }
 
 model Location {
-  id           Int           @id @default(autoincrement())
-  address      String
-  lat          Float
-  lng          Float
-  property     Property?
+  id       Int       @id @default(autoincrement())
+  address  String
+  lat      Float
+  lng      Float
+  property Property?
 }
 
 model NearbyPlace {
@@ -87,7 +85,7 @@ model Rule {
 
 model Review {
   id         Int      @id @default(autoincrement())
-  user       String   // Nome do usuário para guest reviews
+  user       String // Nome do usuário para guest reviews
   avatar     String
   rating     Float
   date       String
@@ -100,18 +98,19 @@ model Review {
 
 /// Usuários e autenticação
 model User {
-  id            Int       @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   name          String
-  email         String    @unique
+  email         String     @unique
   emailVerified DateTime?
   password      String
   avatar        String?
-  role          Role      @default(USER)
+  role          Role       @default(USER)
   sessions      Session[]
   accounts      Account[]
-  reviews       Review[]  @relation("UserReviews")
+  reviews       Review[]   @relation("UserReviews")
   auditLogs     AuditLog[]
 }
+
 enum Role {
   USER
   HOST
@@ -120,21 +119,22 @@ enum Role {
 
 /// NextAuth.js Models
 model Account {
-  id                String   @id @default(cuid())
-  userId            Int
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?  @map("refresh_token")
-  access_token      String?  @map("access_token")
-  expires_at        Int?     @map("expires_at")
-  token_type        String?  @map("token_type")
-  scope             String?
-  id_token          String?  @map("id_token")
-  session_state     String?  @map("session_state")
+  id                 String  @id @default(cuid())
+  userId             Int
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String? @map("refresh_token")
+  access_token       String? @map("access_token")
+  expires_at         Int?    @map("expires_at")
+  token_type         String? @map("token_type")
+  scope              String?
+  id_token           String? @map("id_token")
+  session_state      String? @map("session_state")
   oauth_token_secret String? @map("oauth_token_secret")
-  oauth_token       String?  @map("oauth_token")
-  user              User     @relation(fields: [userId], references: [id])
+  oauth_token        String? @map("oauth_token")
+  user               User    @relation(fields: [userId], references: [id])
+
   @@unique([provider, providerAccountId])
   @@map("accounts")
 }
@@ -145,6 +145,7 @@ model Session {
   userId       Int
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id])
+
   @@map("sessions")
 }
 
@@ -152,6 +153,7 @@ model VerificationToken {
   identifier String
   token      String   @unique
   expires    DateTime
+
   @@unique([identifier, token])
   @@map("verification_tokens")
 }
@@ -159,14 +161,15 @@ model VerificationToken {
 /// Modelo centralizado de auditoria
 model AuditLog {
   id        Int         @id @default(autoincrement())
-  model     String      // Nome do modelo auditado (ex: "Property")
-  recordId  Int         // ID do registro afetado
+  model     String // Nome do modelo auditado (ex: "Property")
+  recordId  Int // ID do registro afetado
   action    AuditAction // CREATE, UPDATE, DELETE
-  userId    Int?        // Usuário que realizou a ação
+  userId    Int? // Usuário que realizou a ação
   user      User?       @relation(fields: [userId], references: [id])
-  changes   Json        // Payload com dados alterados ou snapshot
+  changes   Json // Payload com dados alterados ou snapshot
   timestamp DateTime    @default(now())
 }
+
 enum AuditAction {
   CREATE
   UPDATE

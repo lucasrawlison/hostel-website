@@ -9,6 +9,7 @@
     avatar: string;
     responseTime: string;
     languages: string[];
+    phone: string;
   }
 
   interface Amenity {

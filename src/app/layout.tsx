@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-import { User, Waves } from "lucide-react";
+import { Instagram, Mail, Phone, User, Waves } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
@@ -85,6 +85,149 @@ export default function RootLayout({
         </div>
       </header>
         {children}
+        <footer className="bg-gray-900 text-white">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+                    <div className="sm:col-span-2 lg:col-span-1">
+                      <div className="flex items-center space-x-2 mb-4">
+                        <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-blue-500 rounded-lg flex items-center justify-center">
+                          <Waves className="w-5 h-5 text-white" />
+                        </div>
+                        <span className="text-xl font-bold">A definir</span>
+                      </div>
+                      <p className="text-gray-400 mb-4 text-sm sm:text-base">
+                        Sua melhor opção para aluguéis na Paraíba. Descubra a cidade
+                        onde o sol nasce primeiro.
+                      </p>
+                      <div className="flex space-x-4">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="hover:cursor-pointer text-gray-400 hover:text-black p-2"
+                        >
+                          <Mail className="w-5 h-5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="hover:cursor-pointer text-gray-400 hover:text-black p-2"
+                        >
+                          <Phone className="w-5 h-5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="hover:cursor-pointer text-gray-400 hover:text-black p-2"
+                        >
+                          <Instagram className="w-5 h-5" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-base sm:text-lg font-semibold mb-4">
+                        Propriedades
+                      </h3>
+                      <ul className="space-y-2 text-gray-400 text-sm sm:text-base">
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Tambaú
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Cabo Branco
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Manaíra
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Bessa
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Centro Histórico
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 className="text-base sm:text-lg font-semibold mb-4">
+                        Suporte
+                      </h3>
+                      <ul className="space-y-2 text-gray-400 text-sm sm:text-base">
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Central de Ajuda
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Contato
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Cancelamento
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Segurança
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Termos de Uso
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 className="text-base sm:text-lg font-semibold mb-4">
+                        Empresa
+                      </h3>
+                      <ul className="space-y-2 text-gray-400 text-sm sm:text-base">
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Sobre Nós
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Carreiras
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Imprensa
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Anuncie
+                          </Link>
+                        </li>
+                        <li>
+                          <Link href="#" className="hover:text-white">
+                            Parceiros
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="border-t border-gray-800 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-gray-400">
+                    <p className="text-sm sm:text-base">
+                      &copy; 2025 A definir. Todos os direitos reservados.
+                    </p>
+                    <p className="text-sm sm:text-base">&copy; Developed by FIGO.</p>
+                  </div>
+                </div>
+              </footer>
       </body>
     </html>
   );
