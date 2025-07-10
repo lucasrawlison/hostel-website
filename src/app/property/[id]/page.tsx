@@ -22,7 +22,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Select,
   SelectContent,
@@ -30,12 +29,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Property } from "@/app/types/property";
 import axios, { isAxiosError } from "axios";
 import { useParams } from "next/navigation";
 import formatarEmReal from "@/app/utils/formatarEmReal";
-import { Input } from "@/components/ui/input";
 import Calendar22 from "@/components/datePicker";
 import diferencaEmDias from "@/app/utils/diferençaDias";
 import imgPlaceholder from "@/imgs/placeholder.svg";
@@ -45,7 +43,7 @@ export default function PropertyDetails() {
 
   const MapVis = dynamic(() => import("@/app/utils/map"), { ssr: false });
   const [property, setProperty] = useState<Property | undefined>(undefined);
-  const [isLoagingProperty, setIsLoadingProperty] = useState<boolean>(true);
+  const [, setIsLoadingProperty] = useState<boolean>(true);
   const [date1, setDate1] = useState<Date | undefined>(undefined);
   const [date2, setDate2] = useState<Date | undefined>(undefined);
   const [guests, setGuests] = useState<number>(1);

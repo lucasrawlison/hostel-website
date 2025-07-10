@@ -15,7 +15,7 @@
   interface Amenity {
     name: string;
     icon: string;
-    available: boolean;
+    properties?: Property[];
   }
 
   interface Location {
@@ -33,7 +33,7 @@
   }
 
   export interface Property {
-    id: string;
+    id: number;
     title: string;
     locationMin: string;
     price: number;

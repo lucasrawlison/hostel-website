@@ -37,6 +37,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Separator } from "@/components/ui/separator"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Property } from "@/app/types/property";
+
 
 export default function PropertiesPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list" | "map">("grid")
@@ -45,136 +47,67 @@ export default function PropertiesPage() {
   const [selectedPropertyTypes, setSelectedPropertyTypes] = useState<string[]>([])
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
 
-  const properties = [
-    {
-      id: 1,
-      title: "Apartamento Vista Mar - Tambaú",
-      location: "Tambaú, João Pessoa",
-      price: 180,
-      rating: 4.8,
-      reviews: 124,
-      image: "/placeholder.svg?height=300&width=400",
-      amenities: ["Wifi", "Ar Condicionado", "Vista para o Mar", "Piscina"],
-      guests: 4,
-      bedrooms: 2,
-      bathrooms: 2,
-      type: "Apartamento",
-      host: "Maria Silva",
-      instantBook: true,
+const properties: Property[] = [
+  {
+    id: 1,
+    title: "Apartamento Luxuoso na Praia",
+    locationMin: "Tambaú, João Pessoa",
+    price: 250,
+    rating: 4.8,
+    reviewsQtd: 120,
+    guests: 4,
+    bedrooms: 2,
+    bathrooms: 2,
+    description: "Aproveite o melhor da praia com este apartamento luxuoso e bem localizado.",
+    featured: true,
+    image: "/images/property1.jpg",
+    host: {
+      name: "João Silva",
+      avatar: "/images/host1.jpg",
+      responseTime: "rápido",
+      languages: ["Português", "Inglês"],
+      phone: "+55 83 99999-9999",
     },
-    {
-      id: 2,
-      title: "Casa de Praia - Cabo Branco",
-      location: "Cabo Branco, João Pessoa",
-      price: 320,
-      rating: 4.9,
-      reviews: 89,
-      image: "/placeholder.svg?height=300&width=400",
-      amenities: ["Wifi", "Estacionamento", "Churrasqueira", "Jardim"],
-      guests: 8,
-      bedrooms: 4,
-      bathrooms: 3,
-      type: "Casa",
-      host: "João Santos",
-      instantBook: false,
+    location: {
+      address: "Av. Epitácio Pessoa, 1234, Tambaú, João Pessoa - PB",
+      lat: -7.1156,
+      lng: -34.8631,
     },
-    {
-      id: 3,
-      title: "Loft Moderno - Manaíra",
-      location: "Manaíra, João Pessoa",
-      price: 150,
-      rating: 4.7,
-      reviews: 156,
-      image: "/placeholder.svg?height=300&width=400",
-      amenities: ["Wifi", "Academia", "Piscina", "Segurança 24h"],
-      guests: 2,
-      bedrooms: 1,
-      bathrooms: 1,
-      type: "Loft",
-      host: "Ana Costa",
-      instantBook: true,
-    },
-    {
-      id: 4,
-      title: "Cobertura Luxo - Bessa",
-      location: "Bessa, João Pessoa",
-      price: 450,
-      rating: 5.0,
-      reviews: 67,
-      image: "/placeholder.svg?height=300&width=400",
-      amenities: ["Wifi", "Piscina Privativa", "Terraço", "Vista Panorâmica"],
-      guests: 6,
-      bedrooms: 3,
-      bathrooms: 3,
-      type: "Cobertura",
-      host: "Carlos Oliveira",
-      instantBook: true,
-    },
-    {
-      id: 5,
-      title: "Apartamento Família - Altiplano",
-      location: "Altiplano, João Pessoa",
-      price: 120,
-      rating: 4.6,
-      reviews: 203,
-      image: "/placeholder.svg?height=300&width=400",
-      amenities: ["Wifi", "Estacionamento", "Playground", "Área Gourmet"],
-      guests: 6,
-      bedrooms: 3,
-      bathrooms: 2,
-      type: "Apartamento",
-      host: "Fernanda Lima",
-      instantBook: false,
-    },
-    {
-      id: 6,
-      title: "Studio Aconchegante - Centro",
-      location: "Centro Histórico, João Pessoa",
-      price: 90,
-      rating: 4.5,
-      reviews: 178,
-      image: "/placeholder.svg?height=300&width=400",
-      amenities: ["Wifi", "Ar Condicionado", "Próximo ao Centro", "Transporte"],
-      guests: 2,
-      bedrooms: 1,
-      bathrooms: 1,
-      type: "Studio",
-      host: "Roberto Silva",
-      instantBook: true,
-    },
-    {
-      id: 7,
-      title: "Casa Colonial - Centro Histórico",
-      location: "Centro Histórico, João Pessoa",
-      price: 200,
-      rating: 4.8,
-      reviews: 95,
-      image: "/placeholder.svg?height=300&width=400",
-      amenities: ["Wifi", "Ar Condicionado", "Patrimônio Histórico", "Jardim"],
-      guests: 5,
-      bedrooms: 3,
-      bathrooms: 2,
-      type: "Casa",
-      host: "Luiza Mendes",
-      instantBook: false,
-    },
-    {
-      id: 8,
-      title: "Apartamento Moderno - Miramar",
-      location: "Miramar, João Pessoa",
-      price: 160,
-      rating: 4.7,
-      reviews: 112,
-      image: "/placeholder.svg?height=300&width=400",
-      amenities: ["Wifi", "Piscina", "Academia", "Estacionamento"],
-      guests: 4,
-      bedrooms: 2,
-      bathrooms: 2,
-      type: "Apartamento",
-      host: "Pedro Costa",
-      instantBook: true,
-    },
-  ]
+    amenities: [
+      { name: "WiFi", icon: "",  },
+      { name: "Ar Condicionado", icon: "" },
+      { name: "Piscina", icon: "" },
+      { name: "Estacionamento", icon: "" },
+      { name: "Cozinha Completa", icon: "" },
+    ],
+    rules: ["Não é permitido fumar", "Animais de estimação não são permitidos"],
+    reviews: [
+      {
+        id: 1,
+        user: "Maria Oliveira",
+        avatar: "/images/review1.jpg",
+        rating: 5,
+        date: "2023-10-01",
+        comment:
+          "Excelente apartamento! Muito confortável e bem localizado. Recomendo!",
+      },
+      {
+        id: 2,
+        user: "Carlos Souza",
+        avatar: "/images/review2.jpg",
+        rating: 4,
+        date: "2023-09-15",
+        comment:
+          "Boa estadia, mas poderia ter mais utensílios de cozinha.",
+      },
+    ],
+    nearbyPlaces: [
+      { name: "Praia de Tambaú", distance: 200, type: "Praia" },
+      { name: "Mercado Municipal", distance: 500, type: "Mercado" },
+      { name: "Restaurante Maré Alta", distance: 300, type: "Restaurante" },
+    ],
+  },
+]
 
   const amenitiesList = [
     { id: "wifi", name: "WiFi", icon: Wifi },
@@ -314,7 +247,7 @@ export default function PropertiesPage() {
     </div>
   )
 
-  const PropertyCard = ({ property, isListView = false }: { property: any; isListView?: boolean }) => (
+  const PropertyCard = ({ property, isListView = false }: { property: Property; isListView?: boolean }) => (
     <Card
       className={`group hover:shadow-xl transition-all duration-300 border-orange-100 hover:border-orange-200 overflow-hidden ${isListView ? "flex flex-row" : ""}`}
     >
@@ -335,9 +268,9 @@ export default function PropertiesPage() {
         >
           <Heart className="w-4 h-4" />
         </Button>
-        {property.instantBook && (
+        {/* {property.instantBook && (
           <Badge className="absolute top-3 left-3 bg-green-500 hover:bg-green-600 text-xs">Reserva Instantânea</Badge>
-        )}
+        )} */}
       </div>
       <CardContent className={`${isListView ? "flex-1 flex flex-col justify-between" : ""} p-4 sm:p-6`}>
         <div>
@@ -345,7 +278,7 @@ export default function PropertiesPage() {
             <div className="flex items-center space-x-1">
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
               <span className="text-sm font-medium text-gray-900">{property.rating}</span>
-              <span className="text-xs sm:text-sm text-gray-500">({property.reviews} avaliações)</span>
+              <span className="text-xs sm:text-sm text-gray-500">({property.reviewsQtd} avaliações)</span>
             </div>
           </div>
           <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors line-clamp-2">
@@ -353,7 +286,7 @@ export default function PropertiesPage() {
           </h3>
           <p className="text-sm sm:text-base text-gray-600 mb-3 flex items-center">
             <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
-            <span className="truncate">{property.location}</span>
+            {/* <span className="truncate">{property.location}</span> */}
           </p>
           <div className="flex items-center text-xs sm:text-sm text-gray-500 mb-4 space-x-3 sm:space-x-4">
             <span className="flex items-center">
@@ -370,9 +303,9 @@ export default function PropertiesPage() {
             </span>
           </div>
           <div className="flex flex-wrap gap-1 sm:gap-2 mb-4">
-            {property.amenities.slice(0, 3).map((amenity: string, index: number) => (
+            {property.amenities.slice(0, 3).map((amenity , index: number) => (
               <Badge key={index} variant="secondary" className="text-xs bg-blue-50 text-blue-700 hover:bg-blue-100">
-                {amenity}
+                {amenity.name}
               </Badge>
             ))}
             {property.amenities.length > 3 && (

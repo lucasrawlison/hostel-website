@@ -7,12 +7,10 @@ import {
   Users,
   Wifi,
   Car,
-  Waves,
   Coffee,
   Shield,
   Award,
   Phone,
-  Mail,
   LoaderCircle,
 } from "lucide-react";
 import Image from "next/image";
@@ -25,7 +23,6 @@ import Autoplay from "embla-carousel-autoplay";
 import hero from "@/imgs/pbHero1.jpeg";
 import hero2 from "@/imgs/pbHero2.jpeg";
 import igrejaBananeiras from "@/imgs/igrejaBananeiras.jpg";
-import imgPlaceholder from "@/imgs/placeholder.svg";
 import formatarEmReal from "@/app/utils/formatarEmReal";
 import CasaBananeiras1 from "@/imgs/properties/1/casa-bananeiras.jpg";
 
@@ -43,7 +40,6 @@ import {
 } from "@/components/ui/carousel";
 import React, { useEffect, useState } from "react";
 import axios, { isAxiosError } from "axios";
-import { Amenity } from "@prisma/client";
 
 export default function Component() {
   const plugin = React.useRef(Autoplay({ delay: 4000 }));
