@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   Search,
   MapPin,
@@ -9,7 +9,6 @@ import {
   Filter,
   Grid3X3,
   List,
-  Map,
   SlidersHorizontal,
   X,
   ChevronDown,
@@ -23,6 +22,8 @@ import {
   Shield,
   Home,
   Building,
+  LoaderCircle,
+  Loader2,
 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -38,76 +39,45 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Separator } from "@/components/ui/separator"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Property } from "@/app/types/property";
+// import placeholder from "@/imgs/placeholder.svg"
+import axios, { isAxiosError } from "axios"
 
 
 export default function PropertiesPage() {
-  const [viewMode, setViewMode] = useState<"grid" | "list" | "map">("grid")
+  const [viewMode, setViewMode] = useState<"grid" | "list" >("grid")
   const [priceRange, setPriceRange] = useState([50, 500])
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([])
   const [selectedPropertyTypes, setSelectedPropertyTypes] = useState<string[]>([])
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
+  const [properties, setProperties] = useState<Property[]>([])
+  const [isLoadingProperties, setIsLoadingProperties] = useState(false)
 
-const properties: Property[] = [
-  {
-    id: 1,
-    title: "Apartamento Luxuoso na Praia",
-    locationMin: "Tambaú, João Pessoa",
-    price: 250,
-    rating: 4.8,
-    reviewsQtd: 120,
-    guests: 4,
-    bedrooms: 2,
-    bathrooms: 2,
-    description: "Aproveite o melhor da praia com este apartamento luxuoso e bem localizado.",
-    featured: true,
-    image: "/images/property1.jpg",
-    host: {
-      name: "João Silva",
-      avatar: "/images/host1.jpg",
-      responseTime: "rápido",
-      languages: ["Português", "Inglês"],
-      phone: "+55 83 99999-9999",
-    },
-    location: {
-      address: "Av. Epitácio Pessoa, 1234, Tambaú, João Pessoa - PB",
-      lat: -7.1156,
-      lng: -34.8631,
-    },
-    amenities: [
-      { name: "WiFi", icon: "",  },
-      { name: "Ar Condicionado", icon: "" },
-      { name: "Piscina", icon: "" },
-      { name: "Estacionamento", icon: "" },
-      { name: "Cozinha Completa", icon: "" },
-    ],
-    rules: ["Não é permitido fumar", "Animais de estimação não são permitidos"],
-    reviews: [
-      {
-        id: 1,
-        user: "Maria Oliveira",
-        avatar: "/images/review1.jpg",
-        rating: 5,
-        date: "2023-10-01",
-        comment:
-          "Excelente apartamento! Muito confortável e bem localizado. Recomendo!",
-      },
-      {
-        id: 2,
-        user: "Carlos Souza",
-        avatar: "/images/review2.jpg",
-        rating: 4,
-        date: "2023-09-15",
-        comment:
-          "Boa estadia, mas poderia ter mais utensílios de cozinha.",
-      },
-    ],
-    nearbyPlaces: [
-      { name: "Praia de Tambaú", distance: 200, type: "Praia" },
-      { name: "Mercado Municipal", distance: 500, type: "Mercado" },
-      { name: "Restaurante Maré Alta", distance: 300, type: "Restaurante" },
-    ],
-  },
-]
+  const getAllProperties = async () => {
+    setIsLoadingProperties(true)
+    try {
+      const response = await axios.get("/api/getAllProperties")
+      if(response.status === 200){
+        const data = response.data.properties;
+        setProperties(data)
+        setIsLoadingProperties(false)
+      }
+    } catch (error) {
+
+      setIsLoadingProperties(false)
+      if(isAxiosError(error)){
+        console.error("Erro ao buscar propriedades:", error.response?.data || error.message)
+      }
+    }
+  }
+
+
+
+  useEffect(()=>{
+    console.log("Propriedades carregadas:", isLoadingProperties)
+  },[isLoadingProperties])
+  useEffect(()=>{
+    getAllProperties();
+  },[])
 
   const amenitiesList = [
     { id: "wifi", name: "WiFi", icon: Wifi },
@@ -248,8 +218,10 @@ const properties: Property[] = [
   )
 
   const PropertyCard = ({ property, isListView = false }: { property: Property; isListView?: boolean }) => (
+   <Link href={`/property/${property.id}`} className="no-underline">
     <Card
-      className={`group hover:shadow-xl transition-all duration-300 border-orange-100 hover:border-orange-200 overflow-hidden ${isListView ? "flex flex-row" : ""}`}
+      
+      className={`group hover:shadow-xl hover:cursor-pointer transition-all duration-300 border-orange-100 hover:border-orange-200 overflow-hidden ${isListView ? "flex flex-row" : ""}`}
     >
       <div className={`relative ${isListView ? "w-80 flex-shrink-0" : ""}`}>
         <Image
@@ -320,14 +292,13 @@ const properties: Property[] = [
             <span className="text-xl sm:text-2xl font-bold text-gray-900">R$ {property.price}</span>
             <span className="text-sm sm:text-base text-gray-500">/noite</span>
           </div>
-          <Link href={`/property/${property.id}`}>
             <Button className="bg-gradient-to-r from-orange-500 to-blue-600 hover:from-orange-600 hover:to-blue-700 text-sm sm:text-base px-3 sm:px-4">
               Ver Detalhes
             </Button>
-          </Link>
         </div>
       </CardContent>
     </Card>
+   </Link>
   )
 
   return (
@@ -368,7 +339,9 @@ const properties: Property[] = [
             <div className="">
               <Card className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-lg font-semibold text-gray-900">Filtros</h2>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Filtros
+                  </h2>
                   <SlidersHorizontal className="w-5 h-5 text-gray-500" />
                 </div>
                 <FilterContent />
@@ -384,7 +357,11 @@ const properties: Property[] = [
                 {/* Mobile Filters */}
                 <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
                   <SheetTrigger asChild>
-                    <Button variant="outline" size="sm" className="lg:hidden bg-transparent">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="lg:hidden bg-transparent"
+                    >
                       <Filter className="w-4 h-4 mr-2" />
                       Filtros
                     </Button>
@@ -393,7 +370,11 @@ const properties: Property[] = [
                     <SheetHeader className="p-6 pb-0">
                       <SheetTitle className="flex items-center justify-between">
                         Filtros
-                        <Button variant="ghost" size="sm" onClick={() => setIsFiltersOpen(false)}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setIsFiltersOpen(false)}
+                        >
                           <X className="w-4 h-4" />
                         </Button>
                       </SheetTitle>
@@ -403,8 +384,16 @@ const properties: Property[] = [
                     </div>
                   </SheetContent>
                 </Sheet>
-
-                <span className="text-sm text-gray-600">{properties.length} propriedades encontradas</span>
+                  <span className="text-sm text-gray-600">
+                    {properties.length} propriedades encontradas
+                  </span>
+                  <div
+                    onClick={() => getAllProperties()}
+                    className="hover:cursor-pointer flex flex-row gap-1 items-center justify-center"
+                  >
+                    <span className="text-sm text-gray-600">recarregar</span>
+                    <Loader2 className="w-2.5 h-2.5 translate-y-0.5 " />
+                  </div>
               </div>
 
               {/* View Mode Controls */}
@@ -425,38 +414,42 @@ const properties: Property[] = [
                 >
                   <List className="w-4 h-4" />
                 </Button>
-                <Button
-                  variant={viewMode === "map" ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => setViewMode("map")}
-                  className="h-8 px-3"
-                >
-                  <Map className="w-4 h-4" />
-                </Button>
               </div>
             </div>
 
             {/* Properties Grid/List */}
-            {viewMode === "map" ? (
-              <div className="bg-gray-200 h-96 rounded-lg flex items-center justify-center">
-                <p className="text-gray-500">Visualização do mapa será implementada aqui</p>
-              </div>
-            ) : (
-              <div
-                className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6" : "space-y-6"}
-              >
-                {properties.map((property) => (
-                  <PropertyCard key={property.id} property={property} isListView={viewMode === "list"} />
-                ))}
-              </div>
-            )}
+
+            <div
+              className={
+                viewMode === "grid"
+                  ? "relative grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 min-h-screen"
+                  : "space-y-6"
+              }
+            >
+              {/* Loading State */}
+              {isLoadingProperties && (
+                <div className="absolute flex items-center justify-center bg-white/85 w-full h-full">
+                  <LoaderCircle className="w-8 h-8 text-black animate-spin" />
+                </div>
+              )}
+              {properties.map((property) => (
+                <PropertyCard
+                  key={property.id}
+                  property={property}
+                  isListView={viewMode === "list"}
+                />
+              ))}
+            </div>
 
             {/* Pagination */}
             <div className="flex items-center justify-center mt-12 space-x-2">
               <Button variant="outline" disabled>
                 Anterior
               </Button>
-              <Button variant="default" className="bg-orange-500 hover:bg-orange-600">
+              <Button
+                variant="default"
+                className="bg-orange-500 hover:bg-orange-600"
+              >
                 1
               </Button>
               <Button variant="outline">2</Button>
@@ -467,5 +460,5 @@ const properties: Property[] = [
         </div>
       </div>
     </div>
-  )
+  );
 }

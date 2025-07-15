@@ -257,7 +257,7 @@ export default function Component() {
               {featuredProperties.length > 0 &&
                 featuredProperties.map((property) => (
                   <Link key={property.id} href={"/property/" + property.id}>
-                    <Card className="hover:cursor-pointer group hover:shadow-xl transition-all duration-300 border-orange-100 hover:border-orange-200 overflow-hidden">
+                    <Card className="p-0 hover:cursor-pointer group hover:shadow-xl transition-all duration-300 border-orange-100 hover:border-orange-200 overflow-hidden">
                       <div className="relative">
                         <Image
                           src={CasaBananeiras1}
@@ -269,11 +269,11 @@ export default function Component() {
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="absolute top-3 right-3 bg-white/80 hover:bg-white text-gray-700 hover:text-red-500 w-8 h-8 p-0"
+                          className="absolute top-5 right-3 bg-white/80 hover:bg-white text-gray-700 hover:text-red-500 w-8 h-8 p-0"
                         >
                           <Heart className="w-4 h-4" />
                         </Button>
-                        <Badge className="absolute top-3 left-3 bg-orange-500 hover:bg-orange-600 text-xs">
+                        <Badge className="absolute top-5 left-3 bg-orange-500 hover:bg-orange-600 text-xs">
                           Destaque
                         </Badge>
                       </div>
@@ -364,7 +364,7 @@ export default function Component() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Por que escolher A definir?
+              Por que escolher Sol E Mar?
             </h2>
             <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
               Somos especialistas na Paraíba e oferecemos a melhor experiência

@@ -608,20 +608,20 @@ export default function PropertyDetails() {
               {similarProperties.map((similar) => (
                 <Card
                   key={similar.id}
-                  className="group hover:shadow-lg transition-shadow"
+                  className="group p-0 hover:cursor-pointer hover:shadow-lg transition-shadow"
                 >
-                  <div className="relative">
+                  <div className="relative overflow-hidden rounded-t-lg ">
                     <Image
                       src={imgPlaceholder}
                       alt={similar.title}
                       width={300}
                       height={200}
-                      className="w-full h-48 object-cover rounded-t-lg group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="absolute top-3 right-3 bg-white/80 hover:bg-white text-gray-700 hover:text-red-500 w-8 h-8 p-0"
+                      className="absolute hover:cursor-pointer top-5 right-3 bg-white/80 hover:bg-white text-gray-700 hover:text-red-500 w-8 h-8 p-0"
                     >
                       <Heart className="w-4 h-4" />
                     </Button>
@@ -646,9 +646,9 @@ export default function PropertyDetails() {
                         </span>
                         <span className="text-gray-500 text-sm">/noite</span>
                       </div>
-                      <Button size="sm" variant="outline">
-                        Ver
-                      </Button>
+                      <Button  className="bg-gradient-to-r from-orange-500 to-blue-600 hover:from-orange-600 hover:to-blue-700 text-sm sm:text-base px-3 sm:px-4">
+              Ver Detalhes
+            </Button>
                     </div>
                   </CardContent>
                 </Card>
