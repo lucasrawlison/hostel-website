@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    console.log("property:", property);
+    // console.log("property:", property);
 
     return NextResponse.json(
       {
